@@ -9,6 +9,7 @@ var compression = require('compression');
 var mongoose = require('mongoose');
 require('./models/Posts');
 require('./models/Comments');
+require('./models/Users');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
