@@ -1,29 +1,32 @@
 app.controller('home', [
-    '$scope', 'post',
-    function ($scope, post) {
+    '$scope', 'post', 'postPromise',
+    function ($scope, Post, postPromise) {
 
-        $scope.posts = post.posts;
+        $scope.posts = postPromise.data;
 
         $scope.addPost = function () {
             if (!$scope.title || $scope.title === '') {
                 return;
             }
-            $scope.posts.push({
+            
+            Post.create({
                 title: $scope.title,
-                link: $scope.link,
-                upvotes: 0,
-                comments: [
-                    {author: 'Joe', body: 'Cool post!', upvotes: 0},
-                    {author: 'Bob', body: 'Great idea but everything is wrong!', upvotes: 0}
-                ]
+                link: $scope.link
             });
-            $scope.title = '';
-            $scope.link = '';
+            
+            $scope.posts = Post.posts;
+            
+            clearFields();
         };
 
         $scope.incrementUpvotes = function (post) {
-            post.upvotes++;
+            Post.upvote(post);
         };
+        
+        function clearFields(){
+            $scope.title = '';
+            $scope.link = '';
+        }
         
     }]).config([
     '$stateProvider',
@@ -33,8 +36,13 @@ app.controller('home', [
         $stateProvider
                 .state('home', {
                     url: '/home',
-                    templateUrl: 'html/home.html',
-                    controller: 'home'
+                    templateUrl: '/public/html/home.html',
+                    controller: 'home',
+                    resolve: {
+                        postPromise: ['post', function(Post){
+                            return Post.getAll();
+                        }]
+                    }
                 });
 
         $urlRouterProvider.otherwise('home');
