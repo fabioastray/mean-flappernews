@@ -24,6 +24,7 @@ app.controller('home', [
         $scope.incrementUpvotes = function (post) {
             post.upvotes++;
         };
+        
     }]).config([
     '$stateProvider',
     '$urlRouterProvider',

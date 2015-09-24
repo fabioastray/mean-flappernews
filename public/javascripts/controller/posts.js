@@ -16,7 +16,6 @@ app.controller('posts', [
             $scope.body = '';
         };
 
-
     }]).config([
     '$stateProvider',
     '$urlRouterProvider',
