@@ -4,7 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var compression = require('compression')
+var compression = require('compression');
+
+var mongoose = require('mongoose');
+require('./models/Posts');
+require('./models/Comments');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -58,5 +62,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
+mongoose.connect('mongodb://localhost/news');
 
 module.exports = app;
