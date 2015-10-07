@@ -1,8 +1,9 @@
 app.controller('home', [
-    '$scope', 'post', 'postPromise',
-    function ($scope, Post, postPromise) {
+    '$scope', 'post', 'auth', 'postPromise',
+    function ($scope, Post, auth, postPromise) {
 
         $scope.posts = postPromise.data;
+        $scope.isLoggedIn = auth.isLoggedIn;
 
         $scope.addPost = function () {
             if (!$scope.title || $scope.title === '') {

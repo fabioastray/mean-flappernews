@@ -1,8 +1,9 @@
 app.controller('posts', [
-    '$scope', '$stateParams', 'postObj', 'post',
-    function ($scope, $stateParams, postObj, Post) {
+    '$scope', 'auth', 'postObj', 'post',
+    function ($scope, auth, postObj, Post) {
 
         $scope.post = postObj;
+        $scope.isLoggedIn = auth.isLoggedIn;
 
         $scope.addComment = function () {
             if ($scope.body === '') { return; }
@@ -12,7 +13,7 @@ app.controller('posts', [
             }).success(function(comment){
                 $scope.post.comments.push(comment);
                 clearFields();
-            })
+            });
         };
         
         $scope.incrementUpvoteComment = function (comment) {

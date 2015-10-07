@@ -5,7 +5,7 @@ app.controller('auth', [
         init();
 
         $scope.register = function () {
-            auth.register('flapper-news-token', $scope.user).error(function (error) {
+            auth.register($scope.user).error(function (error) {
                 $scope.error = error;
             }).then(function () {
                 $state.go('home');
