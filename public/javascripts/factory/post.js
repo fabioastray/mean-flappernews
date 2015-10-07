@@ -1,7 +1,10 @@
-app.factory('post', ['$http', function($http){
+app.factory('post', ['$http', 'auth', function($http, auth){
    
    var o = {
        posts: []
+   },
+   authorization = {
+        headers: { Authorization: 'Bearer ' + auth.getToken() }
    };
    
    o.getAll = function(){
@@ -17,19 +20,19 @@ app.factory('post', ['$http', function($http){
    };
    
    o.create = function(post){
-       return $http.post('/posts', post).success(function(data){
+       return $http.post('/posts', post, authorization).success(function(data){
           o.posts.push(data); 
        });
    };
    
    o.upvote = function(post){
-       return $http.put('/posts/' + post._id + '/upvote').success(function(data){
+       return $http.put('/posts/' + post._id + '/upvote', authorization).success(function(data){
           post.upvotes ++; 
        });
    };
    
    o.upvoteComment = function(post, comment){
-       return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote')
+       return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote', authorization)
         .success(function(data){
           comment.upvotes ++; 
        });
@@ -37,7 +40,7 @@ app.factory('post', ['$http', function($http){
    
    o.addComment = function(id, comment){
        return $http.post('/posts/' + id + '/comments', comment);
-   }
+   };
    
    return o;
 }]);
