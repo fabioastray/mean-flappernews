@@ -9,11 +9,14 @@
             <span class="glyphicon glyphicon-thumbs-up"
                   ng-click="incrementUpvotes(post)"></span>
             {{ post.upvotes }}
+            <span class="glyphicon glyphicon-thumbs-down"
+                  ng-click="incrementDownvotes(post)"></span>
+            {{ post.downvotes }}
             <span ng-show="post.author">
-                posted by <a>{{post.author}}</a> |
+                posted by <a>{{ post.author }}</a> |
             </span>
             <span class="title">
-                <a ng-show="post.link" href="{{post.link}}">
+                <a ng-show="post.link" href="{{ post.link }}">
                     {{ post.title }}
                 </a>
                 <span ng-hide="post.link">

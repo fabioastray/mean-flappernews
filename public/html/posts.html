@@ -1,10 +1,10 @@
 <div class="page-header">
     <h3>
         <a ng-show="post.link" href="{{post.link}}">
-            {{post.title}}
+            {{ post.title }}
         </a>
         <span ng-hide="post.link">
-            {{post.title}}
+            {{ post.title }}
         </span>
     </h3>
 </div>
@@ -12,9 +12,12 @@
 <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
     <span class="glyphicon glyphicon-thumbs-up"
           ng-click="incrementUpvoteComment(comment)"></span>
-    {{comment.upvotes}} - by {{comment.author}}
+    {{ comment.upvotes }}
+    <span class="glyphicon glyphicon-thumbs-up"
+          ng-click="incrementDownvoteComment(comment)"></span>
+    {{ comment.downvotes }} posted by {{ comment.author }}
     <span class="comment-body">
-        {{comment.body}}
+    {{ comment.body }}
     </span>
 </div>
 

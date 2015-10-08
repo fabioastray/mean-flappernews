@@ -24,6 +24,10 @@ app.controller('home', [
             Post.upvote(post);
         };
         
+        $scope.incrementDownvotes = function (post) {
+            Post.downvote(post);
+        };
+        
         function clearFields(){
             $scope.title = '';
             $scope.link = '';

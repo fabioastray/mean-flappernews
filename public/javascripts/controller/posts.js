@@ -20,6 +20,10 @@ app.controller('posts', [
             Post.upvoteComment(postObj, comment);
         };
         
+        $scope.incrementDownvoteComment = function (comment) {
+            Post.downvoteComment(postObj, comment);
+        };
+        
         function clearFields(){
             $scope.body = '';
         }
