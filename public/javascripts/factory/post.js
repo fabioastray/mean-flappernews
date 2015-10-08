@@ -28,7 +28,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
        return $http.put('/posts/' + post._id + '/upvote', null, {
           headers: { Authorization: 'Bearer ' + auth.getToken() }
        }).success(function(data){
-          post.upvotes ++; 
+          post.upvotes = data; 
        });
    };
    
@@ -36,7 +36,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
        return $http.put('/posts/' + post._id + '/downvote', null, {
           headers: { Authorization: 'Bearer ' + auth.getToken() }
        }).success(function(data){
-          post.downvotes ++; 
+          post.downvotes = data; 
        });
    };
    
@@ -45,7 +45,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
           headers: { Authorization: 'Bearer ' + auth.getToken() }
        })
         .success(function(data){
-          comment.upvotes ++; 
+          comment.upvotes = data; 
        });
    };
    
@@ -54,7 +54,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
           headers: { Authorization: 'Bearer ' + auth.getToken() }
        })
         .success(function(data){
-          comment.downvotes ++; 
+          comment.downvotes = data;
        });
    };
    
