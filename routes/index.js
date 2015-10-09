@@ -49,6 +49,7 @@ router.get('/posts', function(req, res, next) {
         _(posts).each(function(post){
             post.upvotes = post.upvotes.length;
             post.downvotes = post.downvotes.length;
+            post.comments = post.comments.length;
         });
         
         res.json(posts);
@@ -78,8 +79,9 @@ router.post('/posts', auth, function(req, res, next) {
         if(err){ return next(err); }
         
         post = post.toObject();                
-        post.upvotes = post.upvotes.length;
-        post.downvotes = post.downvotes.length;
+        post.upvotes = 0;
+        post.downvotes = 0;
+        post.comments = 0;
         
         res.json(post);
     });
