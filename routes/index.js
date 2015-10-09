@@ -16,17 +16,16 @@ var Downvote = mongoose.model('Downvote');
 var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });//'SECRET' it is strongly recommended that you use an environment variable
 
 router.param('post', function(req, res, next, id){
-   
    Post.findById(id).exec(function(err, post){
        if(err){ return next(err); }
        if(!post){ return next(new Error('can\'t find post')); }
+       
        req.post = post;
        return next();
    });
 });
 
 router.param('comment', function(req, res, next, id){
-   
    Comment.findById(id).exec(function(err, comment){
        if(err){ return next(err); }
        if(!comment){ return next(new Error('can\'t find comment')); }
