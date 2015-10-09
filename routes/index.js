@@ -4,6 +4,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var passport = require('passport');
 var jwt = require('express-jwt');
+var _ = require('underscore');
 
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
@@ -15,7 +16,7 @@ var Downvote = mongoose.model('Downvote');
 var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });//'SECRET' it is strongly recommended that you use an environment variable
 
 router.param('post', function(req, res, next, id){
-    
+   
    var query = Post.findById(id);
    
    query.exec(function(err, post){
@@ -47,54 +48,29 @@ router.get('/', function(req, res, next) {
 /* home */
 
 router.get('/posts', function(req, res, next) {
-    Post.find(function (err, posts){
+    Post.find().lean().exec(function (err, posts){
         if(err){ return next(err); }
+
+        _(posts).each(function(post){
+            post.upvotes = post.upvotes.length;
+            post.downvotes = post.downvotes.length;
+        });
         
-        var postsLength = posts.length,
-            finalPosts = [];
-        
-        for (var i = 0, len = postsLength; i < len; ++i) {
-            finalPosts.push({
-                _id: posts[i]._id,
-                author: posts[i].author,
-                title: posts[i].title,
-                link: posts[i].link,
-                comments: posts[i].comments,
-                upvotes: posts[i].upvotes.length,
-                downvotes: posts[i].downvotes.length
-            });
-        }
-        
-        res.json(finalPosts);
+        res.json(posts);
     });
 });
 
 router.get('/posts/:post', function(req, res) {
     req.post.populate('comments', function(err, post){
         
-        var commentsLength = post.comments.length,
-            finalComments = [];
+        post = post.toObject();
                 
-        for (var j = 0, len = commentsLength; j < len; ++j) {
-            finalComments.push({
-                _id: post.comments[j]._id,
-                author: post.comments[j].author,
-                body: post.comments[j].body,
-                comments: post.comments[j].comments,
-                upvotes: post.comments[j].upvotes.length,
-                downvotes: post.comments[j].downvotes.length
-            });
-        }
-        
-        res.json({
-            _id: post._id,
-            author: post.author,
-            title: post.title,
-            link: post.link,
-            comments: finalComments,
-            upvotes: post.upvotes.length,
-            downvotes: post.downvotes.length
+        _(post.comments).each(function (comment){
+            comment.upvotes = comment.upvotes.length;
+            comment.downvotes = comment.downvotes.length;
         });
+
+        res.json(post);
     });
 });
 
@@ -106,15 +82,11 @@ router.post('/posts', auth, function(req, res, next) {
     post.save(function (err, post){
         if(err){ return next(err); }
         
-        res.json({
-            _id: post._id,
-            author: post.author,
-            title: post.title,
-            link: post.link,
-            comments: post.comments,
-            upvotes: post.upvotes.length,
-            downvotes: post.downvotes.length
-        });
+        post = post.toObject();                
+        post.upvotes = post.upvotes.length;
+        post.downvotes = post.downvotes.length;
+        
+        res.json(post);
     });
 });
 
@@ -165,14 +137,11 @@ router.post('/posts/:post/comments', auth, function(req, res, next) {
         req.post.save(function (err, post){
             if(err){ return next(err); }
             
-            res.json({
-                _id: comment._id,
-                author: comment.author,
-                body: comment.body,
-                comments: comment.comments,
-                upvotes: comment.upvotes.length,
-                downvotes: comment.downvotes.length
-            });
+            comment = comment.toObject();
+            comment.upvotes = comment.upvotes.length;
+            comment.downvotes = comment.downvotes.length;
+            
+            res.json(comment);
         });
     });
 });
