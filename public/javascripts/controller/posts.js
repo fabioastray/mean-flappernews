@@ -6,7 +6,7 @@ app.controller('posts', [
         $scope.isLoggedIn = auth.isLoggedIn;
 
         $scope.addComment = function () {
-            if ($scope.body === '') { return; }
+            if (!$scope.body || $scope.body === '') { return; }
             Post.addComment(postObj._id, {
                 body: $scope.body,
                 author: 'user'
