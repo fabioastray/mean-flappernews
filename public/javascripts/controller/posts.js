@@ -17,11 +17,19 @@ app.controller('posts', [
         };
         
         $scope.incrementUpvoteComment = function (comment) {
-            Post.upvoteComment(postObj, comment);
+            if(auth.isLoggedIn()){
+                Post.upvoteComment(postObj, comment);
+            }else{
+                $scope.error = { message: 'Log in first to upvote' };
+            }
         };
         
         $scope.incrementDownvoteComment = function (comment) {
-            Post.downvoteComment(postObj, comment);
+            if(auth.isLoggedIn()){
+                Post.downvoteComment(postObj, comment);
+            }else{
+                $scope.error = { message: 'Log in first to downvote' };
+            }
         };
         
         function clearFields(){

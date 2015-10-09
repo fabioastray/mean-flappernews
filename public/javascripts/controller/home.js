@@ -21,11 +21,19 @@ app.controller('home', [
         };
 
         $scope.incrementUpvotes = function (post) {
-            Post.upvote(post);
+            if(auth.isLoggedIn()){
+                Post.upvote(post);
+            }else{
+                $scope.error = { message: 'Log in first to upvote' };
+            }
         };
         
         $scope.incrementDownvotes = function (post) {
-            Post.downvote(post);
+            if(auth.isLoggedIn()){
+                Post.downvote(post);
+            }else{
+                $scope.error = { message: 'Log in first to downvote' };
+            }
         };
         
         function clearFields(){
