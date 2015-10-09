@@ -17,9 +17,7 @@ var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });//'SECRET' it is s
 
 router.param('post', function(req, res, next, id){
    
-   var query = Post.findById(id);
-   
-   query.exec(function(err, post){
+   Post.findById(id).exec(function(err, post){
        if(err){ return next(err); }
        if(!post){ return next(new Error('can\'t find post')); }
        req.post = post;
@@ -29,9 +27,7 @@ router.param('post', function(req, res, next, id){
 
 router.param('comment', function(req, res, next, id){
    
-   var query = Comment.findById(id);
-   
-   query.exec(function(err, comment){
+   Comment.findById(id).exec(function(err, comment){
        if(err){ return next(err); }
        if(!comment){ return next(new Error('can\'t find comment')); }
        
