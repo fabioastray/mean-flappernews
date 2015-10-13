@@ -12,7 +12,7 @@ app.controller('home', [
             
             Post.create({
                 title: $scope.title,
-                link: $scope.link
+                link: parseLink($scope.link)
             }).success(function(){
                 alertify.success('Done, creating a post');
             });
@@ -45,6 +45,15 @@ app.controller('home', [
                 alertify.error('Log in first to downvote');
             }
         };
+        
+        function parseLink(link){
+            if(link.indexOf('http://www') !== -1 || 
+               link.indexOf('https://www') !== -1){
+                return link;
+            }else{
+                return 'http://www.' + link;
+            }
+        }
         
         function clearFields(){
             $scope.title = '';
