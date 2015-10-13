@@ -1,6 +1,6 @@
 app.controller('home', [
-    '$scope', 'post', 'auth', 'postPromise',
-    function ($scope, Post, auth, postPromise) {
+    '$scope', 'post', 'auth', 'postPromise', 'alertify',
+    function ($scope, Post, auth, postPromise, alertify) {
 
         $scope.posts = postPromise.data;
         $scope.isLoggedIn = auth.isLoggedIn;
@@ -13,6 +13,8 @@ app.controller('home', [
             Post.create({
                 title: $scope.title,
                 link: $scope.link
+            }).success(function(){
+                alertify.success('Done, creating a post');
             });
             
             $scope.posts = Post.posts;
@@ -24,13 +26,11 @@ app.controller('home', [
             if(auth.isLoggedIn()){
                 Post.upvote(post).success(function(response){
                     if(response.error){
-                        $scope.error = { message: response.message };
-                    }else{
-                        clearErrors();
+                        alertify.error(response.message);
                     }
                 });
             }else{
-                $scope.error = { message: 'Log in first to upvote' };
+                alertify.error('Log in first to upvote');
             }
         };
         
@@ -38,23 +38,17 @@ app.controller('home', [
             if(auth.isLoggedIn()){
                 Post.downvote(post).success(function(response){
                     if(response.error){
-                        $scope.error = { message: response.message };
-                    }else{
-                        clearErrors();
+                        alertify.error(response.message);
                     }
                 });
             }else{
-                $scope.error = { message: 'Log in first to downvote' };
+                alertify.error('Log in first to downvote');
             }
         };
         
         function clearFields(){
             $scope.title = '';
             $scope.link = '';
-        }
-        
-        function clearErrors(){
-            $scope.error = undefined;
         }
         
     }]).config([

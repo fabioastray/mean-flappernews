@@ -185,18 +185,38 @@ router.post('/posts/:post/comments', auth, function(req, res, next) {
 
 router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, next) {
     
-    var upvote = new Upvote();
-        upvote.user = req.payload._id;
+    var userId = req.payload._id,
+        alreadyVoted = false;
     
-    upvote.save(function (err, upvote){
+    Post.find({ _id: req.post._id }).populate({ 
+        path: 'upvotes',
+        match: { user: userId }})
+    .exec(function (err, post){
         if(err){ return next(err); }
         
-        req.comment.upvotes.push(upvote);
-        req.comment.save(function (err, comment){
-            if(err){ return next(err); }
-
-            res.json(comment.upvotes.length);
+        post[0].upvotes.forEach(function(upvote){
+            if(upvote.user == userId){
+                alreadyVoted = true;
+            } 
         });
+        
+        if(alreadyVoted){
+            res.json({ error: true, message: 'You have already upvoted this post' });
+        }else{
+            var upvote = new Upvote();
+                upvote.user = req.payload._id;
+
+            upvote.save(function (err, upvote){
+                if(err){ return next(err); }
+
+                req.comment.upvotes.push(upvote);
+                req.comment.save(function (err, comment){
+                    if(err){ return next(err); }
+
+                    res.json(comment.upvotes.length);
+                });
+            });
+        }
     });
 }); 
 

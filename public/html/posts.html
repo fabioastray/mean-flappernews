@@ -9,10 +9,6 @@
     </h3>
 </div>
 
-<div ng-show="error" class="alert alert-danger row">
-    <span>{{ error.message}}</span>
-</div>
-
 <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
     <span class="glyphicon glyphicon-thumbs-up"
           ng-click="incrementUpvoteComment(comment)"></span>

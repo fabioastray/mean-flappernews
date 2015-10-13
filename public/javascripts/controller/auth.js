@@ -1,12 +1,12 @@
 app.controller('auth', [
-    '$scope', '$state', 'auth',
-    function ($scope, $state, auth) {
+    '$scope', '$state', 'auth', 'alertify',
+    function ($scope, $state, auth, alertify) {
 
         init();
 
         $scope.register = function () {
             auth.register($scope.user).error(function (error) {
-                $scope.error = error;
+                alertify.error(error.message);
             }).then(function () {
                 $state.go('home');
             });
@@ -14,7 +14,7 @@ app.controller('auth', [
 
         $scope.logIn = function () {
             auth.logIn($scope.user).error(function (error) {
-                $scope.error = error;
+                alertify.error(error.message);
             }).then(function () {
                 $state.go('home');
             });
@@ -22,7 +22,6 @@ app.controller('auth', [
 
         function init() {
             $scope.user = {};
-            $scope.error = undefined;
         }
 
     }]).config([
