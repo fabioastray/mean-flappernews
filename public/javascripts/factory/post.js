@@ -28,7 +28,9 @@ app.factory('post', ['$http', 'auth', function($http, auth){
        return $http.put('/posts/' + post._id + '/upvote', null, {
           headers: { Authorization: 'Bearer ' + auth.getToken() }
        }).success(function(data){
-          post.upvotes = data; 
+            if(!data.error){
+                post.upvotes = data; 
+            }
        });
    };
    
@@ -36,7 +38,9 @@ app.factory('post', ['$http', 'auth', function($http, auth){
        return $http.put('/posts/' + post._id + '/downvote', null, {
           headers: { Authorization: 'Bearer ' + auth.getToken() }
        }).success(function(data){
-          post.downvotes = data; 
+            if(!data.error){
+                post.downvotes = data; 
+            }
        });
    };
    

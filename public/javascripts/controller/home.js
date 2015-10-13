@@ -22,7 +22,11 @@ app.controller('home', [
 
         $scope.incrementUpvotes = function (post) {
             if(auth.isLoggedIn()){
-                Post.upvote(post);
+                Post.upvote(post).success(function(response){
+                    if(response.error){
+                        $scope.error = { message: response.message };
+                    }
+                });
             }else{
                 $scope.error = { message: 'Log in first to upvote' };
             }
