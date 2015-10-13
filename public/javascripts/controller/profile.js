@@ -2,8 +2,13 @@ app.controller('profile', [
     '$scope', 'Auth', 'userPromise', 'alertify',
     function ($scope, Auth, userPromise, alertify) {
 
-        $scope.user = userPromise.data;
+        $scope.user = userPromise;
         $scope.isLoggedIn = Auth.isLoggedIn;
+        
+        $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
+            //event.preventDefault();//prevent file from uploading
+            console.log('prevented');
+        });
         
     }]).config([
     '$stateProvider',
@@ -16,7 +21,7 @@ app.controller('profile', [
                     templateUrl: '/public/html/profile.html',
                     controller: 'profile',
                     resolve: {
-                        userPromise: ['user', function(User){
+                        userPromise: ['User', function(User){
                             return User.getCurrent();
                         }]
                     }
