@@ -4,10 +4,7 @@ app.config(['$compileProvider', 'flowFactoryProvider', function ($compileProvide
     $compileProvider.debugInfoEnabled(false);    
     
     flowFactoryProvider.defaults = {
-        permanentErrors: [404, 500, 501],
-        maxChunkRetries: 1,
-        chunkRetryInterval: 5000,
-        simultaneousUploads: 4,
+        simultaneousUploads: 0,
         singleFile: true
     };
     

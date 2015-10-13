@@ -7,7 +7,7 @@ app.controller('profile', [
         
         $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
             //event.preventDefault();//prevent file from uploading
-            console.log('prevented');
+            console.log(flowFile);
         });
         
     }]).config([
