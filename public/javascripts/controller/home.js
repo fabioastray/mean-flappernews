@@ -25,6 +25,8 @@ app.controller('home', [
                 Post.upvote(post).success(function(response){
                     if(response.error){
                         $scope.error = { message: response.message };
+                    }else{
+                        clearErrors();
                     }
                 });
             }else{
@@ -37,6 +39,8 @@ app.controller('home', [
                 Post.downvote(post).success(function(response){
                     if(response.error){
                         $scope.error = { message: response.message };
+                    }else{
+                        clearErrors();
                     }
                 });
             }else{
@@ -47,6 +51,10 @@ app.controller('home', [
         function clearFields(){
             $scope.title = '';
             $scope.link = '';
+        }
+        
+        function clearErrors(){
+            $scope.error = undefined;
         }
         
     }]).config([
