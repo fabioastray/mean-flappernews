@@ -126,18 +126,38 @@ router.put('/posts/:post/upvote', auth, function(req, res, next) {
 
 router.put('/posts/:post/downvote', auth, function(req, res, next) {
     
-    var downvote = new Downvote();
-        downvote.user = req.payload._id;
-    
-    downvote.save(function (err, downvote){
+    var userId = req.payload._id,
+        alreadyVoted = false;
+        
+    Post.find({ _id: req.post._id }).populate({ 
+        path: 'downvotes',
+        match: { user: userId }})
+    .exec(function (err, post){
         if(err){ return next(err); }
         
-        req.post.downvotes.push(downvote);
-        req.post.save(function (err, post){
-            if(err){ return next(err); }
-
-            res.json(post.downvotes.length);
+        post[0].downvotes.forEach(function(downvote){
+            if(downvote.user == userId){
+                alreadyVoted = true;
+            } 
         });
+        
+        if(alreadyVoted){
+            res.json({ error: true, message: 'You have already downvoted this post' });
+        }else{
+            var downvote = new Downvote();
+                downvote.user = userId;
+
+            downvote.save(function (err, downvote){
+                if(err){ return next(err); }
+
+                req.post.downvotes.push(downvote);
+                req.post.save(function (err, post){
+                    if(err){ return next(err); }
+
+                    res.json(post.downvotes.length);
+                });
+            });
+        }
     });
 });
 

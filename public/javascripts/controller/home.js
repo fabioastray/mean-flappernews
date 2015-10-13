@@ -34,7 +34,11 @@ app.controller('home', [
         
         $scope.incrementDownvotes = function (post) {
             if(auth.isLoggedIn()){
-                Post.downvote(post);
+                Post.downvote(post).success(function(response){
+                    if(response.error){
+                        $scope.error = { message: response.message };
+                    }
+                });
             }else{
                 $scope.error = { message: 'Log in first to downvote' };
             }
