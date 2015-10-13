@@ -272,7 +272,7 @@ router.post('/register', function(req, res, next){
         if(err){ return next(err); }
         
         if(user){
-            return res.status(400).json({ message: 'Please choose other username, this is currently in use' });
+            return res.status(400).json({ message: 'Please choose another username, this is currently in use' });
         }else{
             var user = new User();
             user.username = req.body.username;
