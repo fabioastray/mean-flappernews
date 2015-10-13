@@ -42,11 +42,10 @@ router.get('/', function(req, res, next) {
 });
 /* home */
 
-router.get('/profile', function(req, res, next) {
+router.get('/profile', auth, function(req, res, next) {
+    console.log(req.payload);
     User.findOne({ _id: req.payload._id }).lean().exec(function (err, user){
         if(err){ return next(err); }
-
-        console.log(user);
         
         res.json(user);
     });

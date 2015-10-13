@@ -1,9 +1,9 @@
 app.controller('posts', [
-    '$scope', 'auth', 'postObj', 'post', 'alertify',
-    function ($scope, auth, postObj, Post, alertify) {
+    '$scope', 'Auth', 'postObj', 'Post', 'alertify',
+    function ($scope, Auth, postObj, Post, alertify) {
 
         $scope.post = postObj;
-        $scope.isLoggedIn = auth.isLoggedIn;
+        $scope.isLoggedIn = Auth.isLoggedIn;
 
         $scope.addComment = function () {
             if (!$scope.body || $scope.body === '' ||
@@ -20,7 +20,7 @@ app.controller('posts', [
         };
         
         $scope.incrementUpvoteComment = function (comment) {
-            if(auth.isLoggedIn()){
+            if(Auth.isLoggedIn()){
                 Post.upvoteComment(postObj, comment).error(function(error){
                     alertify.error(error.message);
                 });
@@ -30,7 +30,7 @@ app.controller('posts', [
         };
         
         $scope.incrementDownvoteComment = function (comment) {
-            if(auth.isLoggedIn()){
+            if(Auth.isLoggedIn()){
                 Post.downvoteComment(postObj, comment).error(function(error){
                     alertify.error(error.message);
                 });
@@ -56,7 +56,7 @@ app.controller('posts', [
                     templateUrl: '/public/html/posts.html',
                     controller: 'posts',
                     resolve: {
-                        postObj: ['$stateParams', 'post', function($stateParams, Post){
+                        postObj: ['$stateParams', 'Post', function($stateParams, Post){
                             return Post.get($stateParams.id);
                         }]
                     }

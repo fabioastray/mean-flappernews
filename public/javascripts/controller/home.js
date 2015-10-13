@@ -1,9 +1,9 @@
 app.controller('home', [
-    '$scope', 'post', 'auth', 'postPromise', 'alertify',
-    function ($scope, Post, auth, postPromise, alertify) {
+    '$scope', 'Post', 'Auth', 'postPromise', 'alertify',
+    function ($scope, Post, Auth, postPromise, alertify) {
 
         $scope.posts = postPromise.data;
-        $scope.isLoggedIn = auth.isLoggedIn;
+        $scope.isLoggedIn = Auth.isLoggedIn;
 
         $scope.addPost = function () {
             if (!$scope.title || $scope.title === '') {
@@ -23,7 +23,7 @@ app.controller('home', [
         };
 
         $scope.incrementUpvotes = function (post) {
-            if(auth.isLoggedIn()){
+            if(Auth.isLoggedIn()){
                 Post.upvote(post).error(function(error){
                     alertify.error(error.message);
                 });
@@ -33,7 +33,7 @@ app.controller('home', [
         };
         
         $scope.incrementDownvotes = function (post) {
-            if(auth.isLoggedIn()){
+            if(Auth.isLoggedIn()){
                 Post.downvote(post).error(function(error){
                     alertify.error(error.message);
                 });
@@ -68,7 +68,7 @@ app.controller('home', [
                     templateUrl: '/public/html/home.html',
                     controller: 'home',
                     resolve: {
-                        postPromise: ['post', function(Post){
+                        postPromise: ['Post', function(Post){
                             return Post.getAll();
                         }]
                     }

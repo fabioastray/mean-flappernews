@@ -1,13 +1,13 @@
 app.controller('navbar', [
-    '$scope', 'auth',
-    function ($scope, auth) {
+    '$scope', 'Auth', 'User',
+    function ($scope, Auth, User) {
         
         init();
         
         function init(){
-            $scope.isLoggedIn = auth.isLoggedIn;
-            $scope.currentUser = auth.currentUser;
-            $scope.logOut = auth.logOut;
+            $scope.isLoggedIn = Auth.isLoggedIn;
+            $scope.currentUser = Auth.currentUser;
+            $scope.logOut = Auth.logOut;
         }
         
     }]);

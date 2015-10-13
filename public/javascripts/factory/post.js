@@ -1,4 +1,4 @@
-app.factory('post', ['$http', 'auth', function($http, auth){
+app.factory('Post', ['$http', 'Auth', function($http, Auth){
    
    var o = {
        posts: []
@@ -18,7 +18,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
    
    o.create = function(post){
        return $http.post('/posts', post, {
-          headers: { Authorization: 'Bearer ' + auth.getToken() }
+          headers: { Authorization: 'Bearer ' + Auth.getToken() }
        }).success(function(data){
           o.posts.push(data); 
        });
@@ -26,7 +26,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
    
    o.upvote = function(post){
        return $http.put('/posts/' + post._id + '/upvote', null, {
-          headers: { Authorization: 'Bearer ' + auth.getToken() }
+          headers: { Authorization: 'Bearer ' + Auth.getToken() }
        }).success(function(data){
             if(!data.error){
                 post.upvotes = data; 
@@ -36,7 +36,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
    
    o.downvote = function(post){
        return $http.put('/posts/' + post._id + '/downvote', null, {
-          headers: { Authorization: 'Bearer ' + auth.getToken() }
+          headers: { Authorization: 'Bearer ' + Auth.getToken() }
        }).success(function(data){
             if(!data.error){
                 post.downvotes = data; 
@@ -46,7 +46,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
    
    o.upvoteComment = function(post, comment){
        return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote', null, {
-          headers: { Authorization: 'Bearer ' + auth.getToken() }
+          headers: { Authorization: 'Bearer ' + Auth.getToken() }
        })
         .success(function(data){
             if(!data.error){
@@ -57,7 +57,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
    
    o.downvoteComment = function(post, comment){
        return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/downvote', null, {
-          headers: { Authorization: 'Bearer ' + auth.getToken() }
+          headers: { Authorization: 'Bearer ' + Auth.getToken() }
        })
         .success(function(data){
             if(!data.error){
@@ -68,7 +68,7 @@ app.factory('post', ['$http', 'auth', function($http, auth){
    
    o.addComment = function(id, comment){
        return $http.post('/posts/' + id + '/comments', comment, {
-          headers: { Authorization: 'Bearer ' + auth.getToken() }
+          headers: { Authorization: 'Bearer ' + Auth.getToken() }
        });
    };
    
