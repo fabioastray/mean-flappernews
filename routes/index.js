@@ -42,6 +42,16 @@ router.get('/', function(req, res, next) {
 });
 /* home */
 
+router.get('/profile', function(req, res, next) {
+    User.findOne({ _id: req.payload._id }).lean().exec(function (err, user){
+        if(err){ return next(err); }
+
+        console.log(user);
+        
+        res.json(user);
+    });
+});
+
 router.get('/posts', function(req, res, next) {
     Post.find().lean().exec(function (err, posts){
         if(err){ return next(err); }
@@ -105,7 +115,7 @@ router.put('/posts/:post/upvote', auth, function(req, res, next) {
         });
         
         if(alreadyVoted){
-            res.json({ error: true, message: 'You have already upvoted this post' });
+            res.status(400).json({ message: 'You have already upvoted this post' });
         }else{
             var upvote = new Upvote();
                 upvote.user = userId;
@@ -142,7 +152,7 @@ router.put('/posts/:post/downvote', auth, function(req, res, next) {
         });
         
         if(alreadyVoted){
-            res.json({ error: true, message: 'You have already downvoted this post' });
+            res.status(400).json({ message: 'You have already downvoted this post' });
         }else{
             var downvote = new Downvote();
                 downvote.user = userId;
@@ -199,7 +209,7 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
         });
         
         if(alreadyVoted){
-            res.json({ error: true, message: 'You have already upvoted this comment' });
+            res.status(400).json({ message: 'You have already upvoted this comment' });
         }else{
             var upvote = new Upvote();
                 upvote.user = req.payload._id;
@@ -236,7 +246,7 @@ router.put('/posts/:post/comments/:comment/downvote', auth, function(req, res, n
         });
         
         if(alreadyVoted){
-            res.json({ error: true, message: 'You have already downvoted this comment' });
+            res.status(400).json({ message: 'You have already downvoted this comment' });
         }else{
             var downvote = new Downvote();
                 downvote.user = req.payload._id;
@@ -258,15 +268,24 @@ router.put('/posts/:post/comments/:comment/downvote', auth, function(req, res, n
 router.post('/register', function(req, res, next){
     if(!req.body.username || !req.body.password){ return res.status(400).json({ message: 'Please fill out all the fields' }); }
     
-    var user = new User();
-    user.username = req.body.username;
-    user.setPassword(req.body.password);
-    
-    user.save(function(err){
-       if(err){ return next(err); }
-       
-       return res.json({ token: user.generateJWT() });
+    User.findOne({ username: req.body.username.toLowerCase() }).exec(function(err, user){
+        if(err){ return next(err); }
+        
+        if(user){
+            return res.status(400).json({ message: 'Please choose other username, this is currently in use' });
+        }else{
+            var user = new User();
+            user.username = req.body.username;
+            user.setPassword(req.body.password);
+
+            user.save(function(err){
+               if(err){ return next(err); }
+
+               return res.json({ token: user.generateJWT() });
+            });
+        }
     });
+    
 });
 
 router.post('/login', function(req, res, next){

@@ -21,10 +21,8 @@ app.controller('posts', [
         
         $scope.incrementUpvoteComment = function (comment) {
             if(auth.isLoggedIn()){
-                Post.upvoteComment(postObj, comment).success(function (response){
-                    if(response.error){
-                        alertify.error(response.message);
-                    }
+                Post.upvoteComment(postObj, comment).error(function(error){
+                    alertify.error(error.message);
                 });
             }else{
                 alertify.error('Log in first to upvote');
@@ -33,10 +31,8 @@ app.controller('posts', [
         
         $scope.incrementDownvoteComment = function (comment) {
             if(auth.isLoggedIn()){
-                Post.downvoteComment(postObj, comment).success(function (response){
-                    if(response.error){
-                        alertify.error(response.message);
-                    }
+                Post.downvoteComment(postObj, comment).error(function(error){
+                    alertify.error(error.message);
                 });
             }else{
                 alertify.error('Log in first to downvote');

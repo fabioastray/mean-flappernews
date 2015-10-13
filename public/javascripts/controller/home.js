@@ -24,10 +24,8 @@ app.controller('home', [
 
         $scope.incrementUpvotes = function (post) {
             if(auth.isLoggedIn()){
-                Post.upvote(post).success(function(response){
-                    if(response.error){
-                        alertify.error(response.message);
-                    }
+                Post.upvote(post).error(function(error){
+                    alertify.error(error.message);
                 });
             }else{
                 alertify.error('Log in first to upvote');
@@ -36,10 +34,8 @@ app.controller('home', [
         
         $scope.incrementDownvotes = function (post) {
             if(auth.isLoggedIn()){
-                Post.downvote(post).success(function(response){
-                    if(response.error){
-                        alertify.error(response.message);
-                    }
+                Post.downvote(post).error(function(error){
+                    alertify.error(error.message);
                 });
             }else{
                 alertify.error('Log in first to downvote');
