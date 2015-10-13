@@ -58,6 +58,7 @@ app.controller('home', [
         function clearFields(){
             $scope.title = '';
             $scope.link = '';
+            $scope.addPostClick = false;
         }
         
     }]).config([

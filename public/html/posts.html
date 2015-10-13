@@ -21,13 +21,18 @@
     </span>
 </div>
 
+<br>
+<div class="row">
+    <button class="btn btn-default" ng-click="addCommentClick = true">New comment</button>
+</div>
+<br>
+
 <div ng-hide="isLoggedIn()">
     <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
 </div>
 
-<form ng-submit="addComment()" ng-show="isLoggedIn()"
+<form ng-submit="addComment()" ng-show="isLoggedIn() && addCommentClick"
       class="comment-form">
-    <h3>Add a new comment</h3>
 
     <div class="form-group">
         <input type="text"

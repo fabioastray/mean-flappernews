@@ -43,6 +43,7 @@ app.controller('posts', [
         
         function clearFields(){
             $scope.body = '';
+            $scope.addCommentClick = false;
         }
 
     }]).config([
