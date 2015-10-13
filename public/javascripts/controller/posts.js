@@ -6,10 +6,12 @@ app.controller('posts', [
         $scope.isLoggedIn = auth.isLoggedIn;
 
         $scope.addComment = function () {
-            if (!$scope.body || $scope.body === '') { return; }
+            if (!$scope.body || $scope.body === '' ||
+                !$scope.author || $scope.author === '') { return; }
+        
             Post.addComment(postObj._id, {
                 body: $scope.body,
-                author: 'user'
+                author: $scope.author
             }).success(function(comment){
                 $scope.post.comments.push(comment);
                 alertify.success('Done creating this comment');
@@ -42,6 +44,7 @@ app.controller('posts', [
         };
         
         function clearFields(){
+            $scope.author = '';
             $scope.body = '';
             $scope.addCommentClick = false;
         }
