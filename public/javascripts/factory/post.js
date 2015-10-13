@@ -49,7 +49,9 @@ app.factory('post', ['$http', 'auth', function($http, auth){
           headers: { Authorization: 'Bearer ' + auth.getToken() }
        })
         .success(function(data){
-          comment.upvotes = data; 
+            if(!data.error){
+                comment.upvotes = data; 
+            }
        });
    };
    
@@ -58,7 +60,9 @@ app.factory('post', ['$http', 'auth', function($http, auth){
           headers: { Authorization: 'Bearer ' + auth.getToken() }
        })
         .success(function(data){
-          comment.downvotes = data;
+            if(!data.error){
+                comment.downvotes = data;
+            }
        });
    };
    

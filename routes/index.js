@@ -188,20 +188,20 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
     var userId = req.payload._id,
         alreadyVoted = false;
     
-    Post.find({ _id: req.post._id }).populate({ 
+    Comment.find({ _id: req.comment._id }).populate({ 
         path: 'upvotes',
         match: { user: userId }})
-    .exec(function (err, post){
+    .exec(function (err, comment){
         if(err){ return next(err); }
         
-        post[0].upvotes.forEach(function(upvote){
+        comment[0].upvotes.forEach(function(upvote){
             if(upvote.user == userId){
                 alreadyVoted = true;
             } 
         });
         
         if(alreadyVoted){
-            res.json({ error: true, message: 'You have already upvoted this post' });
+            res.json({ error: true, message: 'You have already upvoted this comment' });
         }else{
             var upvote = new Upvote();
                 upvote.user = req.payload._id;
@@ -222,18 +222,38 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
 
 router.put('/posts/:post/comments/:comment/downvote', auth, function(req, res, next) {
     
-    var downvote = new Downvote();
-        downvote.user = req.payload._id;
+    var userId = req.payload._id,
+        alreadyVoted = false;
     
-    downvote.save(function (err, downvote){
+    Comment.find({ _id: req.comment._id }).populate({ 
+        path: 'downvotes',
+        match: { user: userId }})
+    .exec(function (err, comment){
         if(err){ return next(err); }
         
-        req.comment.downvotes.push(downvote);
-        req.comment.save(function (err, comment){
-            if(err){ return next(err); }
-
-            res.json(comment.downvotes.length);
+        comment[0].downvotes.forEach(function(downvote){
+            if(downvote.user == userId){
+                alreadyVoted = true;
+            } 
         });
+        
+        if(alreadyVoted){
+            res.json({ error: true, message: 'You have already downvoted this comment' });
+        }else{
+            var downvote = new Downvote();
+                downvote.user = req.payload._id;
+
+            downvote.save(function (err, downvote){
+                if(err){ return next(err); }
+
+                req.comment.downvotes.push(downvote);
+                req.comment.save(function (err, comment){
+                    if(err){ return next(err); }
+
+                    res.json(comment.downvotes.length);
+                });
+            });
+        }
     });
 }); 
 
