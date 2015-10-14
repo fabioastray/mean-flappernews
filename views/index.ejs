@@ -31,7 +31,13 @@
           flow-files-submitted="$flow.upload()">
         <nav class="navbar navbar-default pull-right" ng-controller="navbar">
             <ul class="nav navbar-nav">
-                <li ng-show="isLoggedIn()" tooltip="My Profile"><a href="/#/profile">{{ currentUser() }}</a></li>
+                <li ng-show="isLoggedIn()" tooltip="My Profile">
+                    <img src="/public/images/profiles/{{ currentUser.profilePhoto }}" 
+                         class="profile-picture hand" width="40" ng-click="go('profile')"/>
+                </li> 
+                <li ng-show="isLoggedIn()" tooltip="My Profile">
+                    <a href="/#/profile">{{ currentUser.username }}</a>
+                </li>
                 <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
                 <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
                 <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>

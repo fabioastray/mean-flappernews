@@ -30,7 +30,6 @@ app.controller('profile', [
                 User.edit($scope.user).success(function (data){
                     alertify.success('Profile updated');
                 });
-              //send you binary data via $http or $resource or do anything else with it
             };
             fr.readAsDataURL($scope.flow.file);
         };

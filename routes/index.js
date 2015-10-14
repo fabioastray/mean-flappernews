@@ -92,8 +92,6 @@ router.post('/profile', auth, function(req, res, next) {
             });
         } 
     });  
-   
-    
 });
 
 router.get('/posts', function(req, res, next) {
