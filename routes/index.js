@@ -5,6 +5,8 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var jwt = require('express-jwt');
 var _ = require('underscore');
+var fs = require('fs');
+var path = require('path');
 
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
@@ -43,12 +45,55 @@ router.get('/', function(req, res, next) {
 /* home */
 
 router.get('/profile', auth, function(req, res, next) {
-    console.log(req.payload);
-    User.findOne({ _id: req.payload._id }).lean().exec(function (err, user){
+    User.findOne({ _id: req.payload._id }, 'username profilePhoto').lean().exec(function (err, user){
         if(err){ return next(err); }
         
         res.json(user);
     });
+});
+
+router.post('/profile', auth, function(req, res, next) {
+    
+    var fileName = req.body.profilePhoto.identifier + '.' + req.body.profilePhoto.extension;
+    
+    var dataUrl = req.body.profilePhoto.data,
+        matches = dataUrl.match(/^data:.+\/(.+);base64,(.*)$/),
+        base64Data = matches[2];
+        
+    var buffer = new Buffer(base64Data, 'base64'),
+        folderToStore = path.join(__dirname, "../public/images/profiles/");
+      
+    fs.writeFile(folderToStore + fileName, buffer, function (err, stat){
+        if(err){ 
+            res.json({ error: true, message: 'Failed to upload profile photo. Please try again.' }); 
+        }else{
+             User.findOne({ _id: req.payload._id }).exec(function (err, user){
+                if(user.profilePhoto){
+                    fs.exists(folderToStore + user.profilePhoto, function (exists){
+                        if(exists){
+                            fs.unlink(folderToStore + user.profilePhoto, function(err){
+                                if(err){ 
+                                    res.json({ error: true, message: 'Failed to delete profile photo. Please try again.' }); 
+                                }else{
+                                    user.profilePhoto = fileName;
+                                    user.save(function (err, user){
+                                        res.json(user.profilePhoto);
+                                    });
+                                }
+                            });
+                        }else{
+                            user.profilePhoto = fileName;
+                            user.save(function (err, user){
+                                res.json(user.profilePhoto);
+                            });
+                        }
+                    });
+                }
+            });
+        } 
+    });  
+   
+    
 });
 
 router.get('/posts', function(req, res, next) {

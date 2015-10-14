@@ -4,11 +4,19 @@ app.factory('User', ['$http', 'Auth', function($http, Auth){
    
     u.getCurrent = function(){
         return $http.get('/profile', {
-          headers: { Authorization: 'Bearer ' + Auth.getToken() }
+            headers: { Authorization: 'Bearer ' + Auth.getToken() }
         }).then(function(res){
             return res.data; 
         });
     };
+    
+    u.edit = function(user){
+        return $http.post('/profile', user, {
+            headers: { Authorization: 'Bearer ' + Auth.getToken() }
+        }).success(function(data){
+            
+        });
+   };
    
    return u;
 }]);
