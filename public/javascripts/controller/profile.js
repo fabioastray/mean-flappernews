@@ -6,7 +6,11 @@ app.controller('profile', [
         $scope.isLoggedIn = Auth.isLoggedIn;
         
         $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
-            //event.preventDefault();//prevent file from uploading
+            var fileSize = flowFile.size / 1024;
+            if(fileSize > 1024){
+                alertify.error('This image exceeds the 1024 Kbs allowed, please select other');
+                event.preventDefault();//prevent file from uploading
+            }
             console.log(flowFile);
         });
         
