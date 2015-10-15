@@ -28,6 +28,9 @@ app.controller('profile', [
                     identifier: $scope.flow.uniqueIdentifier
                 };
                 User.edit($scope.user).success(function (data){
+                    Auth.editToken({
+                        profilePhoto: data    
+                    });
                     alertify.success('Profile updated');
                 });
             };

@@ -77,14 +77,14 @@ router.post('/profile', auth, function(req, res, next) {
                                 }else{
                                     user.profilePhoto = fileName;
                                     user.save(function (err, user){
-                                        res.json(user.profilePhoto);
+                                        res.json({ token: user.generateJWT() });
                                     });
                                 }
                             });
                         }else{
                             user.profilePhoto = fileName;
                             user.save(function (err, user){
-                                res.json(user.profilePhoto);
+                                res.json({ token: user.generateJWT() });
                             });
                         }
                     });

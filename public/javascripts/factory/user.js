@@ -1,4 +1,4 @@
-app.factory('User', ['$http', 'Auth', function($http, Auth){
+app.factory('User', ['$http', '$window', 'Auth', function($http, $window, Auth){
    
    var u = {};
    
@@ -14,7 +14,8 @@ app.factory('User', ['$http', 'Auth', function($http, Auth){
         return $http.post('/profile', user, {
             headers: { Authorization: 'Bearer ' + Auth.getToken() }
         }).success(function(data){
-            
+            Auth.saveToken(data.token);
+            $window.location.reload();
         });
    };
    
