@@ -30,22 +30,25 @@
     <body ng-app="flapperNews" flow-init
           flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
           flow-files-submitted="$flow.upload()">
-        <nav class="navbar navbar-default pull-right" ng-controller="navbar">
+        <nav class="navbar navbar-fixed-top" ng-controller="navbar">
             <ul class="nav navbar-nav">
-                <li ng-show="isLoggedIn()" tooltip="My Profile">
+                <li>
+                    <a href="/#/home/">Home</a>
+                </li>
+                <li ng-show="isLoggedIn()" class="pull-rigth">
                     <img ng-src="/public/images/profiles/{{ currentUser.profilePhoto }}" 
                          alt="profile-photo"
-                         class="profile-picture" width="40"/>
+                         class="profile-photo hand" width="40"/>
                 </li> 
-                <li ng-show="isLoggedIn()" tooltip="My Profile">
+                <li ng-show="isLoggedIn()" class="pull-rigth">
                     <a href="/#/profile">{{ currentUser.username }}</a>
                 </li>
-                <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
-                <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
-                <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+                <li ng-show="isLoggedIn()" class="pull-rigth"><a href="" ng-click="logOut()">Log Out</a></li>
+                <li ng-hide="isLoggedIn()" class="pull-rigth"><a href="/#/login">Log In</a></li>
+                <li ng-hide="isLoggedIn()" class="pull-rigth"><a href="/#/register">Register</a></li>
             </ul>
         </nav>
-        <div class="row">
+        <div class="row margin-top">
             <div class="col-md-6 col-md-offset-3">
                 <ui-view></ui-view>
             </div>
