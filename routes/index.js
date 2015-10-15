@@ -54,49 +54,61 @@ router.get('/profile', auth, function(req, res, next) {
 
 router.post('/profile', auth, function(req, res, next) {
     
-    var fileName = req.body.profilePhotoToServer.identifier + '.' + req.body.profilePhotoToServer.extension;
-    
-    var dataUrl = req.body.profilePhotoToServer.data,
-        matches = dataUrl.match(/^data:.+\/(.+);base64,(.*)$/),
-        base64Data = matches[2];
-        
-    var buffer = new Buffer(base64Data, 'base64'),
-        folderToStore = path.join(__dirname, "../public/images/profiles/");
-      
-    fs.writeFile(folderToStore + fileName, buffer, function (err, stat){
-        if(err){ 
-            res.json({ error: true, message: 'Failed to upload profile photo. Please try again.' }); 
-        }else{
-             User.findOne({ _id: req.payload._id }).exec(function (err, user){
-                if(user.profilePhoto){
-                    fs.exists(folderToStore + user.profilePhoto, function (exists){
-                        if(exists){
-                            fs.unlink(folderToStore + user.profilePhoto, function(err){
-                                if(err){ 
-                                    res.json({ error: true, message: 'Failed to delete profile photo. Please try again.' }); 
-                                }else{
-                                    user.profilePhoto = fileName;
-                                    user.save(function (err, user){
-                                        res.json({ token: user.generateJWT() });
-                                    });
-                                }
-                            });
-                        }else{
-                            user.profilePhoto = fileName;
-                            user.save(function (err, user){
-                                res.json({ token: user.generateJWT() });
-                            });
-                        }
-                    });
-                }else{
-                    user.profilePhoto = fileName;
-                    user.save(function (err, user){
-                        res.json({ token: user.generateJWT() });
-                    });
-                }
+    if(req.body.profilePhotoToServer){
+        var fileName = req.body.profilePhotoToServer.identifier + '.' + req.body.profilePhotoToServer.extension;
+
+        var dataUrl = req.body.profilePhotoToServer.data,
+            matches = dataUrl.match(/^data:.+\/(.+);base64,(.*)$/),
+            base64Data = matches[2];
+
+        var buffer = new Buffer(base64Data, 'base64'),
+            folderToStore = path.join(__dirname, "../public/images/profiles/");
+
+        fs.writeFile(folderToStore + fileName, buffer, function (err, stat){
+            if(err){ 
+                res.json({ error: true, message: 'Failed to upload profile photo. Please try again.' }); 
+            }else{
+                 User.findOne({ _id: req.payload._id }).exec(function (err, user){
+                    if(user.profilePhoto){
+                        fs.exists(folderToStore + user.profilePhoto, function (exists){
+                            if(exists){
+                                fs.unlink(folderToStore + user.profilePhoto, function(err){
+                                    if(err){ 
+                                        res.json({ error: true, message: 'Failed to delete profile photo. Please try again.' }); 
+                                    }else{
+                                        user.username = req.body.username;
+                                        user.profilePhoto = fileName;
+                                        user.save(function (err, user){
+                                            res.json({ token: user.generateJWT() });
+                                        });
+                                    }
+                                });
+                            }else{
+                                user.username = req.body.username;
+                                user.profilePhoto = fileName;
+                                user.save(function (err, user){
+                                    res.json({ token: user.generateJWT() });
+                                });
+                            }
+                        });
+                    }else{
+                        user.username = req.body.username;
+                        user.profilePhoto = fileName;
+                        user.save(function (err, user){
+                            res.json({ token: user.generateJWT() });
+                        });
+                    }
+                });
+            } 
+        });  
+    }else{
+        User.findOne({ _id: req.payload._id }).exec(function (err, user){
+            user.username = req.body.username;
+            user.save(function (err, user){
+                res.json({ token: user.generateJWT() });
             });
-        } 
-    });  
+        });
+    }
 });
 
 router.get('/posts', function(req, res, next) {

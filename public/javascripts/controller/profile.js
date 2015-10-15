@@ -19,24 +19,31 @@ app.controller('profile', [
         });
         
         $scope.editProfile = function(){
-            
-            var fr = new FileReader();
-            fr.onloadend = function(e){
-                $scope.user.profilePhotoToServer = {
-                    data: e.target.result,
-                    extension: getFileExtension($scope.flow.relativePath),
-                    identifier: $scope.flow.uniqueIdentifier
+            if($scope.flow){
+                var fr = new FileReader();
+                fr.onloadend = function(e){
+                    $scope.user.profilePhotoToServer = {
+                        data: e.target.result,
+                        extension: getFileExtension($scope.flow.relativePath),
+                        identifier: $scope.flow.uniqueIdentifier
+                    };
+                    sendCurrentProfile();
                 };
-                User.edit($scope.user).success(function (data){
-                    alertify.success('Profile updated');
-                    var reload = $timeout(function() { 
-                        $timeout.cancel(reload);$window.location.reload();
-                        $window.location.reload();
-                    }, 2000);
-                });
-            };
-            fr.readAsDataURL($scope.flow.file);
+                fr.readAsDataURL($scope.flow.file);
+            }else{
+                sendCurrentProfile();
+            }
         };
+        
+        function sendCurrentProfile(){
+            User.edit($scope.user).success(function (data){
+                alertify.success('Profile updated');
+                var reload = $timeout(function() { 
+                    $timeout.cancel(reload);$window.location.reload();
+                    $window.location.reload();
+                }, 2000);
+            });
+        }
         
         function isValidFileExtension(fileName){
             

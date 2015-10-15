@@ -18,6 +18,7 @@
 
         <script src="/public/javascripts/angularApp.js"></script>
         <script src="/public/javascripts/constants/constants.js"></script>
+        <script src="/public/javascripts/factory/util.js"></script>
         <script src="/public/javascripts/factory/auth.js"></script>
         <script src="/public/javascripts/factory/post.js"></script>
         <script src="/public/javascripts/factory/user.js"></script>
@@ -30,17 +31,19 @@
     <body ng-app="flapperNews" flow-init
           flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
           flow-files-submitted="$flow.upload()">
-        <nav class="navbar navbar-fixed-top" ng-controller="navbar">
+        <nav class="navbar navbar-default navbar-fixed-top" ng-controller="navbar">
             <ul class="nav navbar-nav">
                 <li>
                     <a href="/#/home/">Home</a>
                 </li>
-                <li ng-show="isLoggedIn() && !currentUser.profilePhoto" class="item pull-rigth">
+                <li ng-show="isLoggedIn() && !currentUser.profilePhoto" 
+                    class="pull-rigth">
                     <img ng-src="/public/images/profiles/icon-user-default.png" 
                          alt="profile-photo"
                          class="profile-photo hand" width="40"/>
                 </li> 
-                <li ng-show="isLoggedIn() && currentUser.profilePhoto" class="item pull-rigth">
+                <li ng-show="isLoggedIn() && currentUser.profilePhoto"
+                    class="pull-rigth">
                     <img ng-src="/public/images/profiles/{{ currentUser.profilePhoto }}" 
                          alt="profile-photo"
                          class="profile-photo hand" width="40"/>
