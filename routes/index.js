@@ -54,9 +54,9 @@ router.get('/profile', auth, function(req, res, next) {
 
 router.post('/profile', auth, function(req, res, next) {
     
-    var fileName = req.body.profilePhoto.identifier + '.' + req.body.profilePhoto.extension;
+    var fileName = req.body.profilePhotoToServer.identifier + '.' + req.body.profilePhotoToServer.extension;
     
-    var dataUrl = req.body.profilePhoto.data,
+    var dataUrl = req.body.profilePhotoToServer.data,
         matches = dataUrl.match(/^data:.+\/(.+);base64,(.*)$/),
         base64Data = matches[2];
         
@@ -87,6 +87,11 @@ router.post('/profile', auth, function(req, res, next) {
                                 res.json({ token: user.generateJWT() });
                             });
                         }
+                    });
+                }else{
+                    user.profilePhoto = fileName;
+                    user.save(function (err, user){
+                        res.json({ token: user.generateJWT() });
                     });
                 }
             });

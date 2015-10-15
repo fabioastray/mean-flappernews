@@ -1,6 +1,6 @@
 app.controller('profile', [
-    '$scope', 'Auth', 'User', 'userPromise', 'alertify',
-    function ($scope, Auth, User, userPromise, alertify) {
+    '$scope',  '$window', '$timeout', 'Auth', 'User', 'userPromise', 'alertify',
+    function ($scope,  $window, $timeout, Auth, User, userPromise, alertify) {
 
         $scope.user = userPromise;
         $scope.flow = undefined;
@@ -22,16 +22,17 @@ app.controller('profile', [
             
             var fr = new FileReader();
             fr.onloadend = function(e){
-                $scope.user.profilePhoto = {
+                $scope.user.profilePhotoToServer = {
                     data: e.target.result,
                     extension: getFileExtension($scope.flow.relativePath),
                     identifier: $scope.flow.uniqueIdentifier
                 };
                 User.edit($scope.user).success(function (data){
-                    Auth.editToken({
-                        profilePhoto: data    
-                    });
                     alertify.success('Profile updated');
+                    var reload = $timeout(function() { 
+                        $timeout.cancel(reload);$window.location.reload();
+                        $window.location.reload();
+                    }, 2000);
                 });
             };
             fr.readAsDataURL($scope.flow.file);
