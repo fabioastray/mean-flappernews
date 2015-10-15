@@ -9,10 +9,10 @@ app.controller('profile', [
         $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
             
             if(!isValidFileExtension(flowFile.relativePath)){
-                event.preventDefault();//prevent file from uploading
+                event.preventDefault();
             }
             else if(!isValidFileSize(flowFile.size)){
-                event.preventDefault();//prevent file from uploading
+                event.preventDefault();
             }else{
                 $scope.flow = flowFile;
             }

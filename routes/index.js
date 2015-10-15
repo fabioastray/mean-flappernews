@@ -340,4 +340,9 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
+router.post('/logout', function(req, res, next){
+    req.logOut();
+    res.redirect('/');
+});
+
 module.exports = router;

@@ -15,8 +15,6 @@ app.controller('Auth', [
         $scope.logIn = function () {
             Auth.logIn($scope.user).error(function (error) {
                 alertify.error(error.message);
-            }).then(function () {
-                $state.go('home');
             });
         };
 

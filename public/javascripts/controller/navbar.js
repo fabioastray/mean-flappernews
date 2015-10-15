@@ -10,7 +10,7 @@ app.controller('navbar', [
         
         function init(){
             $scope.isLoggedIn = Auth.isLoggedIn;
-            $scope.currentUser = Auth.currentUser();
+            $scope.currentUser = Auth.payload;
             $scope.logOut = Auth.logOut;
         }
         
