@@ -33,7 +33,7 @@
             <ul class="nav navbar-nav">
                 <li ng-show="isLoggedIn()" tooltip="My Profile">
                     <img src="/public/images/profiles/{{ currentUser.profilePhoto }}" 
-                         class="profile-picture hand" width="40" ng-click="go('profile')"/>
+                         class="profile-picture hand" width="40" ng-click="$state.go('profile')"/>
                 </li> 
                 <li ng-show="isLoggedIn()" tooltip="My Profile">
                     <a href="/#/profile">{{ currentUser.username }}</a>
