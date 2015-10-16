@@ -1,0 +1,1 @@
+app.constant('tokenName', 'flapper-news-token');

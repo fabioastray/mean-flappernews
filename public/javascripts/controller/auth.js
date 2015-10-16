@@ -1,11 +1,12 @@
 app.controller('Auth', [
-    '$scope', '$state', 'Auth', 'alertify',
-    function ($scope, $state, Auth, alertify) {
+    '$scope', '$state', 'Auth', 'Util', 'alertify',
+    function ($scope, $state, Auth, Util, alertify) {
 
         init();
 
         $scope.register = function () {
             Auth.register($scope.user).error(function (error) {
+                Util.setFocus('login.username');
                 alertify.error(error.message);
             }).then(function () {
                 $state.go('home');
@@ -14,6 +15,7 @@ app.controller('Auth', [
 
         $scope.logIn = function () {
             Auth.logIn($scope.user).error(function (error) {
+                Util.setFocus('login.username');
                 alertify.error(error.message);
             });
         };

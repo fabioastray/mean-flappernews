@@ -1,6 +1,6 @@
 app.controller('profile', [
-    '$scope',  '$window', '$timeout', 'Auth', 'User', 'userPromise', 'alertify',
-    function ($scope,  $window, $timeout, Auth, User, userPromise, alertify) {
+    '$scope',  '$window', '$timeout', 'Util', 'Auth', 'User', 'userPromise', 'alertify',
+    function ($scope,  $window, $timeout, Util, Auth, User, userPromise, alertify) {
 
         $scope.user = userPromise;
         $scope.flow = undefined;
@@ -19,6 +19,12 @@ app.controller('profile', [
         });
         
         $scope.editProfile = function(){
+            if(!$scope.user.username || $scope.user.username === ''){ 
+                alertify.log('No empty username field'); 
+                Util.setFocus('profile.username'); 
+                return; 
+            }
+            
             if($scope.flow){
                 var fr = new FileReader();
                 fr.onloadend = function(e){

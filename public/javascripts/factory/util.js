@@ -1,4 +1,4 @@
-app.factory('Util', [function(){
+app.factory('Util', ['$window', function($window){
     
     var u = {};
     
@@ -14,6 +14,13 @@ app.factory('Util', [function(){
         };
         
         image.src = src;
+    };
+    
+    u.setFocus = function (elementId){
+        var element = $window.document.getElementById(elementId);
+        if(element){
+            element.focus();
+        }
     };
     
     return u;
