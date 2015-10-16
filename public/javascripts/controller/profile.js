@@ -18,13 +18,7 @@ app.controller('profile', [
             }
         });
         
-        $scope.editProfile = function(){
-            if(!$scope.user.username || $scope.user.username === ''){ 
-                alertify.log('No empty username field'); 
-                Util.setFocus('profile.username'); 
-                return; 
-            }
-            
+        $scope.editProfile = function(){            
             if($scope.flow){
                 var fr = new FileReader();
                 fr.onloadend = function(e){

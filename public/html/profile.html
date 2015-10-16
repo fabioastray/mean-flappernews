@@ -2,7 +2,7 @@
     <h1>My profile</h1>
 </div>
 
-<form style="margin-top:30px;">
+<form style="margin-top:30px;" name="profileForm" novalidate>
 
     <table class="table-spacing">
         <tr>
@@ -13,6 +13,7 @@
                 <input type="text" id="profile.username"
                    class="form-control"
                    placeholder="Username"
+                   required
                    ng-model="user.username">
             </td>
         </tr>
@@ -39,7 +40,8 @@
         <tr>
             <td></td>
             <td class="pull-right">
-                <button type="submit" class="btn btn-primary" ng-click="editProfile()">Save</button>
+                <button type="submit" class="btn btn-primary" ng-click="editProfile()"
+                        ng-disabled="profileForm.$invalid">Save</button>
                 <button type="submit" class="btn btn-danger">Cancel</button>
             </td>
         </tr>

@@ -1,17 +1,11 @@
 app.controller('home', [
-    '$scope', 'Post', 'Auth', 'Util', 'postPromise', 'alertify',
-    function ($scope, Post, Auth, Util, postPromise, alertify) {
+    '$scope', 'Post', 'Auth', 'postPromise', 'alertify',
+    function ($scope, Post, Auth, postPromise, alertify) {
 
         $scope.posts = postPromise.data;
         $scope.isLoggedIn = Auth.isLoggedIn;
 
         $scope.addPost = function () {
-            if (!$scope.title || $scope.title === '') {
-                Util.setFocus('post.title');
-                alertify.log('No empty title field');
-                return;
-            }
-            
             Post.create({
                 title: $scope.title,
                 link: parseLink($scope.link)
