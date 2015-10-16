@@ -13,7 +13,7 @@
                   ng-click="incrementDownvotes(post)"></span>
             {{ post.downvotes }}
             <span ng-show="post.author">
-                posted by <a>{{ post.author }}</a> |
+                posted by <a tooltip="created at {{ post.createdAt | date : 'short' }}">{{ post.author }}</a> |
             </span>
             <span class="title">
                 <a ng-show="post.link" href="{{ post.link }}">
