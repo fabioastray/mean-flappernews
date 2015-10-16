@@ -3,6 +3,7 @@ app.controller('profile', [
     function ($scope,  $window, $timeout, Util, Auth, User, userPromise, alertify) {
 
         $scope.user = userPromise;
+        $scope.userCopy = _(userPromise).clone();
         $scope.flow = undefined;
         $scope.isLoggedIn = Auth.isLoggedIn;
         
@@ -17,6 +18,10 @@ app.controller('profile', [
                 $scope.flow = flowFile;
             }
         });
+        
+        $scope.cancel = function (){
+            $scope.user = _($scope.userCopy).clone();  
+        };
         
         $scope.editProfile = function(){            
             if($scope.flow){

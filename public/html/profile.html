@@ -22,7 +22,7 @@
             </td>
             <td>
                 <img class="thumbnail" ng-src="/public/images/profiles/icon-user-default.png" 
-                 ng-hide="$flow.files.length || user.profilePhoto"/>
+                     ng-hide="$flow.files.length || user.profilePhoto"/>
                 <img class="thumbnail" ng-src="/public/images/profiles/{{ user.profilePhoto }}"
                      ng-show="!$flow.files.length && user.profilePhoto"/>            
                 <img class="thumbnail" flow-img="$flow.files[0]" ng-show="$flow.files.length"/>
@@ -41,7 +41,7 @@
             <td class="pull-right">
                 <button type="submit" class="btn btn-primary" ng-click="editProfile()"
                         ng-disabled="profileForm.$invalid">Save</button>
-                <button type="submit" class="btn btn-danger">Cancel</button>
+                <button ng-click="cancel(); $flow.files = [];" class="btn btn-danger">Cancel</button>
             </td>
         </tr>
     </table>
