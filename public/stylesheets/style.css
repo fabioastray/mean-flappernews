@@ -7,3 +7,4 @@
 .hand { cursor: pointer; }
 .table-spacing { border-collapse: separate; border-spacing: 1em; }
 .into-image { margin: -8em 0 0 1.25em; }
+.has-error{ border-color: #d9534f; border-style: double; }

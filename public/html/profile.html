@@ -10,10 +10,9 @@
                 <label>Username: </label>
             </td>
             <td>
-                <input type="text" id="profile.username"
-                   class="form-control"
-                   placeholder="Username"
-                   required
+                <input type="text" class="form-control" placeholder="Username"
+                   name="username" required
+                   ng-class="{ 'has-error': profileForm.username.$invalid && !profileForm.username.$pristine }"
                    ng-model="user.username">
             </td>
         </tr>
