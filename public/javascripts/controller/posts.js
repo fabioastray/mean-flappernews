@@ -1,13 +1,16 @@
 app.controller('posts', [
-    '$scope', 'Auth', 'postObj', 'Post', 'alertify',
-    function ($scope, Auth, postObj, Post, alertify) {
+    '$scope', 'Auth', 'Util', 'postObj', 'Post', 'alertify',
+    function ($scope, Auth, Util, postObj, Post, alertify) {
 
         $scope.post = postObj;
         $scope.isLoggedIn = Auth.isLoggedIn;
 
         $scope.addComment = function () {
-            if (!$scope.body || $scope.body === '' ||
-                !$scope.author || $scope.author === '') { return; }
+            if (!$scope.body || $scope.body === '') { 
+                alertify.log('No empty comment field');
+                Util.setFocus('comment.body');
+                return; 
+            }
         
             Post.addComment(postObj._id, {
                 body: $scope.body,
