@@ -1,4 +1,4 @@
-app.factory('Auth', ['$http', '$window', '$state', 'tokenName', function($http, $window, $state, tokenName){
+app.factory('Auth', ['$http', '$window', '$state', '$q', 'tokenName', 'fbAppId', function($http, $window, $state, $q, tokenName, fbAppId){
     
     function getToken(){
         return $window.localStorage[tokenName];
@@ -28,6 +28,18 @@ app.factory('Auth', ['$http', '$window', '$state', 'tokenName', function($http, 
         payload: currentUser()
     };
     
+    auth.init = function (){
+        $window.fbAsyncInit = function () {
+            FB.init({
+                appId: fbAppId,
+                status: true,
+                cookie: true,
+                xfbml: true,
+                version: 'v2.5'
+            });
+        };
+    };
+    
     auth.saveToken = function(token){
         $window.localStorage[tokenName] = token;  
     };
@@ -42,11 +54,33 @@ app.factory('Auth', ['$http', '$window', '$state', 'tokenName', function($http, 
         });
     };
     
-    auth.logIn = function(user){
-        return $http.post('/login', user).success(function(data){
-            auth.saveToken(data.token);
-            $window.location.reload();
-        });
+    auth.logIn = function(method, user){
+        switch(method){
+            case 'localStorage':
+                return $http.post('/login', user).success(function(data){
+                    auth.saveToken(data.token);
+                    $window.location.reload();
+                });
+            break;
+            case 'facebook':
+                var deferred = $q.defer();
+                FB.login(function(response){
+                    console.log(response);
+                    if(!response || response.error){
+                        deferred.reject('Error ocurred');
+                    }else{
+                        if(response.status === 'connected'){
+                            return $http.post('/auth/facebook', response).success(function(data){
+                                auth.saveToken(data.token);
+                                $window.location.reload();
+                            });
+                        }
+                        deferred.resolve(response);
+                    }
+                }, { scope: ['public_profile', 'email'] });
+                return deferred.promise;
+            break;
+        }
     };
     
     auth.logOut = function(){
@@ -58,5 +92,6 @@ app.factory('Auth', ['$http', '$window', '$state', 'tokenName', function($http, 
         });
     };
     
+    auth.init();
     return auth;
 }]);

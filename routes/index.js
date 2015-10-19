@@ -7,12 +7,16 @@ var jwt = require('express-jwt');
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
+var request = require('request');
 
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
 var User = mongoose.model('User');
 var Upvote = mongoose.model('Upvote');
 var Downvote = mongoose.model('Downvote');
+
+var FACEBOOK_APP_ID = '510604439113977';
+var FACEBOOK_APP_SECRET = 'dd3e74db40b22476f544367b1be522e7';
 
 /* middleware */
 var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });//'SECRET' it is strongly recommended that you use an environment variable
@@ -355,6 +359,30 @@ router.post('/login', function(req, res, next){
         
         return user ? res.json({ token: user.generateJWT() }) : res.status(401).json(info);
     })(req, res, next);
+});
+
+router.post('/auth/facebook', function (req, res, next){
+    
+    var hostname = req.headers.host;
+    var accessToken = req.body.authResponse.accessToken;
+    var accessTokenUrl = 'https://graph.facebook.com/v2.3/oauth/access_token';
+    var graphApiUrl = 'https://graph.facebook.com/v2.3/me';
+    var params = {
+        client_id: FACEBOOK_APP_ID,
+        redirect_uri: 'http://' + hostname + '/login',
+        client_secret: FACEBOOK_APP_SECRET,
+        code: accessToken
+    };
+    
+    request.get({ url: accessTokenUrl, qs: params, json: true }, function(err, response, accessToken){
+        if(response.statusCode !== 200){ return res.status(500).send({ message: accessToken.error.message }); }
+        
+        console.log(accessToken);
+    });
+});
+
+router.get('/auth/facebook/callback', function (req, res, next){
+    
 });
 
 router.post('/logout', function(req, res, next){
