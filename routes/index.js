@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 var mongoose = require('mongoose');
+
 var passport = require('passport');
+    
 var jwt = require('express-jwt');
 var _ = require('underscore');
 var fs = require('fs');
@@ -15,8 +17,8 @@ var User = mongoose.model('User');
 var Upvote = mongoose.model('Upvote');
 var Downvote = mongoose.model('Downvote');
 
-var FACEBOOK_APP_ID = '510604439113977';
-var FACEBOOK_APP_SECRET = 'dd3e74db40b22476f544367b1be522e7';
+//var FACEBOOK_APP_ID = '888064754608702';
+//var FACEBOOK_APP_SECRET = 'b355265f3c38d78383f6b7a47dd81e16';
 
 /* middleware */
 var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });//'SECRET' it is strongly recommended that you use an environment variable
@@ -357,32 +359,32 @@ router.post('/login', function(req, res, next){
     passport.authenticate('local', function(err, user, info){
         if(err){ return next(err); }
         
-        return user ? res.json({ token: user.generateJWT() }) : res.status(401).json(info);
+        return user ? res.json({ token: user.generateJWT() }) : res.status(401).json('No user found with this credentials. Please register into app.');
     })(req, res, next);
 });
 
 router.post('/auth/facebook', function (req, res, next){
     
-    var hostname = req.headers.host;
-    var accessToken = req.body.authResponse.accessToken;
-    var accessTokenUrl = 'https://graph.facebook.com/v2.3/oauth/access_token';
-    var graphApiUrl = 'https://graph.facebook.com/v2.3/me';
-    var params = {
-        client_id: FACEBOOK_APP_ID,
-        redirect_uri: 'http://' + hostname + '/login',
-        client_secret: FACEBOOK_APP_SECRET,
-        code: accessToken
-    };
-    
-    request.get({ url: accessTokenUrl, qs: params, json: true }, function(err, response, accessToken){
-        if(response.statusCode !== 200){ return res.status(500).send({ message: accessToken.error.message }); }
+    var facebookUserId = req.body.facebookUserId;
+    User.findOne({ facebook: facebookUserId }).exec(function (err, user){
+        console.log(user);
+        if(err){ return res.status(401).json('Failed to fetch user profile. Please try again.'); }
+        if(!user){ return res.status(401).json('No user found with this credentials. Please register into app.'); }
         
-        console.log(accessToken);
+        user.displayName = req.body.name;
+        user.gender = req.body.gender;
+        user.email = req.body.email;
+        user.profilePhoto = req.body.picture;
+        
+        user.save(function (err, user){
+            res.json({ token: user.generateJWT() });
+        });
     });
 });
 
 router.get('/auth/facebook/callback', function (req, res, next){
-    
+    passport.authenticate('facebook', { successRedirect: '/',
+                                      failureRedirect: '/login' });
 });
 
 router.post('/logout', function(req, res, next){

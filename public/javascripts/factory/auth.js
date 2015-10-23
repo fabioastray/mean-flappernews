@@ -55,32 +55,48 @@ app.factory('Auth', ['$http', '$window', '$state', '$q', 'tokenName', 'fbAppId',
     };
     
     auth.logIn = function(method, user){
+        
+        var deferred = $q.defer();
+        
         switch(method){
             case 'localStorage':
-                return $http.post('/login', user).success(function(data){
-                    auth.saveToken(data.token);
-                    $window.location.reload();
-                });
+                $http.post('/login', user)
+                    .then(function(data){
+                        auth.saveToken(data.token);
+                        $window.location.reload();
+                    }, function (err){
+                        deferred.reject(err.data);
+                    });
             break;
             case 'facebook':
-                var deferred = $q.defer();
+                
                 FB.login(function(response){
-                    console.log(response);
                     if(!response || response.error){
                         deferred.reject('Error ocurred');
                     }else{
                         if(response.status === 'connected'){
-                            return $http.post('/auth/facebook', response).success(function(data){
-                                auth.saveToken(data.token);
-                                $window.location.reload();
+                            FB.api('/me', { fields: ['name', 'email', 'gender', 'picture'] }, function (resp){
+                                $http.post('/auth/facebook', {
+                                    accessToken: response.authResponse.accessToken,
+                                    facebookUserId: response.authResponse.userID,
+                                    name: resp.name,
+                                    email: resp.email,
+                                    gender: resp.gender,
+                                    picture: resp.picture.data.url
+                                }).then(function(data){
+                                    auth.saveToken(response.authResponse.accessToken);
+                                    $window.location.reload();
+                                }, function (err){
+                                    deferred.reject(err.data);
+                                });
                             });
                         }
-                        deferred.resolve(response);
                     }
-                }, { scope: ['public_profile', 'email'] });
-                return deferred.promise;
+                }, { scope: 'email, public_profile' });   
             break;
         }
+        
+        return deferred.promise;
     };
     
     auth.logOut = function(){

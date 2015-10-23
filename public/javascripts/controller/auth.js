@@ -14,9 +14,11 @@ app.controller('Auth', [
         };
 
         $scope.logIn = function (method) {
-            Auth.logIn(method, $scope.user).then(function (error) {
+            Auth.logIn(method, $scope.user)
+            .then(function (error) {},
+            function (error){
                 Util.setFocus('login.username');
-                alertify.error(error.message);
+                alertify.error(error);
             });
         };
 
