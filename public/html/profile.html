@@ -10,7 +10,7 @@
                 <label>Username: </label>
             </td>
             <td>
-                <input type="text" class="form-control" placeholder="Username"
+                <input type="text" class="form-control"
                    name="username" required
                    ng-class="{ 'has-error': profileForm.username.$invalid && !profileForm.username.$pristine }"
                    ng-model="user.username">
@@ -18,20 +18,66 @@
         </tr>
         <tr>
             <td>
+                <label>Full Name: </label>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="displayName" required
+                   ng-class="{ 'has-error': profileForm.displayName.$invalid && !profileForm.displayName.$pristine }"
+                   ng-model="user.displayName">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Gender: </label>
+            </td>
+            <td>
+                <ui-select ng-model="user.gender">
+                    <ui-select-match ui-lock-choice placeholder="Select you gender">{{ $select.selected }}</ui-select-match>
+                    <ui-select-choices repeat="gender in genders | filter:$select.search">
+                        {{ gender }}
+                    </ui-select-choices>
+                </ui-select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Email: </label>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="email" required
+                   ng-class="{ 'has-error': profileForm.email.$invalid || !isEmail(user.email) }"
+                   ng-model="user.email">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Facebook Profile: </label>
+            </td>
+            <td ng-if="user.facebook === ''">No</td>
+            <td ng-if="user.facebook !== ''">Yes</td>
+        </tr>
+        <tr>
+            <td>
                 <label>Photo:</label>
             </td>
             <td>
                 <img class="thumbnail" ng-src="/public/images/profiles/icon-user-default.png" 
-                     ng-hide="$flow.files.length || user.profilePhoto"/>
-                <img class="thumbnail" ng-src="/public/images/profiles/{{ user.profilePhoto }}"
-                     ng-show="!$flow.files.length && user.profilePhoto"/>            
-                <img class="thumbnail" flow-img="$flow.files[0]" ng-show="$flow.files.length"/>
+                     ng-if="!$flow.files.length && !user.profilePhoto"/>
                 
-                <button class="btn btn-default into-image" ng-hide="$flow.files.length" flow-btn 
+                <img class="thumbnail" flow-img="$flow.files[0]" ng-if="$flow.files.length"/>
+                
+                <img class="thumbnail" ng-src="{{ user.profilePhoto }}"
+                     ng-if="!$flow.files.length && user.profilePhoto && user.facebook !== ''"/>
+                
+                <img class="thumbnail" ng-src="/public/images/profiles/{{ user.profilePhoto }}"
+                     ng-if="!$flow.files.length && user.profilePhoto && user.facebook === ''"/>            
+                
+                <button class="btn btn-default into-image" ng-if="!$flow.files.length" flow-btn 
                         tooltip="Only PNG, GIF, JPG or JPEG files with 1024 Kb maximum allowed">Select photo</button>
-                <button class="btn btn-default into-image" ng-show="$flow.files.length" flow-btn
+                <button class="btn btn-default into-image" ng-if="$flow.files.length" flow-btn
                         tooltip="Only PNG, GIF, JPG or JPEG files with 1024 Kb maximum allowed">Change</button>
-                <a href="#" class="btn btn-default into-image" ng-show="$flow.files.length"
+                
+                <a href="#" class="btn btn-default into-image" ng-if="$flow.files.length"
                    ng-click="$flow.cancel()" 
                    tooltip="Only PNG, GIF, JPG or JPEG files with 1024 Kb maximum allowed">Remove</a>
             </td>
@@ -40,7 +86,7 @@
             <td></td>
             <td class="pull-right">
                 <button type="submit" class="btn btn-primary" ng-click="editProfile()"
-                        ng-disabled="profileForm.$invalid">Save</button>
+                        ng-disabled="profileForm.$invalid || !isEmail(user.email)">Save</button>
                 <button ng-click="cancel(); $flow.files = [];" class="btn btn-danger">Cancel</button>
             </td>
         </tr>

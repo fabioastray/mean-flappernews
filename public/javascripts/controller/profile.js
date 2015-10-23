@@ -3,9 +3,14 @@ app.controller('profile', [
     function ($scope,  $window, $timeout, Util, Auth, User, userPromise, alertify) {
 
         $scope.user = userPromise;
+        
+        //delete $scope.user.profilePhoto;
+        
         $scope.userCopy = _(userPromise).clone();
         $scope.flow = undefined;
-        $scope.isLoggedIn = Auth.isLoggedIn;
+        $scope.isLoggedIn = Auth.isLoggedIn;   
+        $scope.isEmail = Util.isEmail;
+        $scope.genders = ['Male', 'Female'];
         
         $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
             
