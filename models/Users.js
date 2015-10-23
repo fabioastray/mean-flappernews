@@ -31,6 +31,10 @@ UserSchema.methods.generateJWT = function(){
     return jwt.sign({
        _id: this._id,
        username: this.username,
+       displayName: this.displayName,
+       gender: this.gender,
+       email: this.email,
+       facebook: this.facebook,
        profilePhoto: this.profilePhoto,
        exp: parseInt(exp.getTime() / 1000)
     }, 'SECRET');//'SECRET' it is strongly recommended that you use an environment variable

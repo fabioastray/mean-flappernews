@@ -45,14 +45,23 @@
                          alt="profile-photo"
                          class="profile-photo hand" width="40"/>
                 </li> 
-                <li ng-show="isLoggedIn() && currentUser.profilePhoto"
+                <li ng-show="isLoggedIn() && currentUser.profilePhoto && currentUser.facebook === ''"
                     class="pull-rigth">
                     <img ng-src="/public/images/profiles/{{ currentUser.profilePhoto }}" 
                          alt="profile-photo"
                          class="profile-photo hand" width="40"/>
                 </li>
-                <li ng-show="isLoggedIn()" class="pull-rigth">
+                <li ng-show="isLoggedIn() && currentUser.profilePhoto && currentUser.facebook !== ''"
+                    class="pull-rigth">
+                    <img ng-src="{{ currentUser.profilePhoto }}" 
+                         alt="profile-photo"
+                         class="profile-photo hand" width="40"/>
+                </li>
+                <li ng-show="isLoggedIn() && currentUser.displayName === ''" class="pull-rigth">
                     <a href="/#/profile">{{ currentUser.username }}</a>
+                </li>
+                <li ng-show="isLoggedIn() && currentUser.displayName !== ''" class="pull-rigth">
+                    <a href="/#/profile">{{ currentUser.displayName }}</a>
                 </li>
                 <li ng-show="isLoggedIn()" class="pull-rigth"><a href="" ng-click="logOut()">Log Out</a></li>
                 <li ng-hide="isLoggedIn()" class="pull-rigth"><a href="/#/login">Log In</a></li>

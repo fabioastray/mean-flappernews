@@ -70,21 +70,21 @@ app.factory('Auth', ['$http', '$window', '$state', '$q', 'tokenName', 'fbAppId',
             break;
             case 'facebook':
                 
-                FB.login(function(response){
-                    if(!response || response.error){
+                FB.login(function(fbResponse){
+                    if(!fbResponse || fbResponse.error){
                         deferred.reject('Error ocurred');
                     }else{
-                        if(response.status === 'connected'){
+                        if(fbResponse.status === 'connected'){
                             FB.api('/me', { fields: ['name', 'email', 'gender', 'picture'] }, function (resp){
                                 $http.post('/auth/facebook', {
-                                    accessToken: response.authResponse.accessToken,
-                                    facebookUserId: response.authResponse.userID,
+                                    accessToken: fbResponse.authResponse.accessToken,
+                                    facebookUserId: fbResponse.authResponse.userID,
                                     name: resp.name,
                                     email: resp.email,
                                     gender: resp.gender,
                                     picture: resp.picture.data.url
-                                }).then(function(data){
-                                    auth.saveToken(response.authResponse.accessToken);
+                                }).then(function(response){
+                                    auth.saveToken(response.data.token);
                                     $window.location.reload();
                                 }, function (err){
                                     deferred.reject(err.data);
