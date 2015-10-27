@@ -9,7 +9,7 @@ var jwt = require('express-jwt');
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-var request = require('request');
+//var request = require('request');
 
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
@@ -19,6 +19,7 @@ var Downvote = mongoose.model('Downvote');
 
 //var FACEBOOK_APP_ID = '888064754608702';
 //var FACEBOOK_APP_SECRET = 'b355265f3c38d78383f6b7a47dd81e16';
+//var sleep = require('sleep');
 
 /* middleware */
 var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });//'SECRET' it is strongly recommended that you use an environment variable
@@ -61,6 +62,7 @@ router.get('/profile', auth, function(req, res, next) {
 router.post('/profile', auth, function(req, res, next) {
     
     if(req.body.profilePhotoToServer && !(req.body.facebook || req.body.facebook === '')){
+
         var fileName = req.body.profilePhotoToServer.identifier + '.' + req.body.profilePhotoToServer.extension;
 
         var dataUrl = req.body.profilePhotoToServer.data,
@@ -375,7 +377,7 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
-router.post('/auth/facebook', function (req, res, next){
+router.post('/login/facebook', function (req, res, next){
     
     var facebookUserId = req.body.facebookUserId;
     
@@ -383,13 +385,12 @@ router.post('/auth/facebook', function (req, res, next){
         if(err){ return res.status(401).json('Failed to fetch user profile. Please try again.'); }
         if(!user){ return res.status(401).json('No user found with this credentials. Please register into app.'); }
         
-        user.displayName = !user.displayName ? req.body.name : user.displayName;
-        user.gender = !user.gender === '' ? req.body.gender : user.gender;
-        user.email = !user.email === '' ? req.body.email : user.email;
-        user.profilePhoto = !user.profilePhoto === '' ? req.body.picture : user.profilePhoto;
+        user.displayName = !user.displayName || req.body.name;
+        user.gender = !user.gender === '' || req.body.gender;
+        user.email = !user.email === '' || req.body.email;
+        user.profilePhoto = !user.profilePhoto === '' || req.body.picture;
         
         user.save(function (err, user){
-            console.log(user);
             res.json({ token: user.generateJWT() });
         });
     });

@@ -15,7 +15,7 @@ app.controller('Auth', [
 
         $scope.logIn = function (method) {
             Auth.logIn(method, $scope.user)
-            .then(function (error) {},
+            .then(function (data) {},
             function (error){
                 Util.setFocus('login.username');
                 alertify.error(error);

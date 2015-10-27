@@ -1,4 +1,5 @@
 var app = angular.module('flapperNews', ['ui.router', 'ui.bootstrap', 'ngAlertify', 'flow', 'ui.select', 'ngSanitize']);
+
 app.config(['$compileProvider', 'flowFactoryProvider', 'uiSelectConfig', function ($compileProvider, flowFactoryProvider, uiSelectConfig){
     
     $compileProvider.debugInfoEnabled(false);    
