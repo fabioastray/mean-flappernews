@@ -9,7 +9,7 @@ var jwt = require('express-jwt');
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-var request = require('request');
+//var request = require('request');
 
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
@@ -19,6 +19,7 @@ var Downvote = mongoose.model('Downvote');
 
 //var FACEBOOK_APP_ID = '888064754608702';
 //var FACEBOOK_APP_SECRET = 'b355265f3c38d78383f6b7a47dd81e16';
+//var sleep = require('sleep');
 
 /* middleware */
 var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });//'SECRET' it is strongly recommended that you use an environment variable
@@ -51,7 +52,7 @@ router.get('/', function(req, res, next) {
 /* home */
 
 router.get('/profile', auth, function(req, res, next) {
-    User.findOne({ _id: req.payload._id }, 'username profilePhoto').lean().exec(function (err, user){
+    User.findOne({ _id: req.payload._id }, 'username displayName gender email facebook profilePhoto').lean().exec(function (err, user){
         if(err){ return next(err); }
         
         res.json(user);
@@ -60,7 +61,8 @@ router.get('/profile', auth, function(req, res, next) {
 
 router.post('/profile', auth, function(req, res, next) {
     
-    if(req.body.profilePhotoToServer){
+    if(req.body.profilePhotoToServer && !(req.body.facebook || req.body.facebook === '')){
+
         var fileName = req.body.profilePhotoToServer.identifier + '.' + req.body.profilePhotoToServer.extension;
 
         var dataUrl = req.body.profilePhotoToServer.data,
@@ -83,6 +85,9 @@ router.post('/profile', auth, function(req, res, next) {
                                         res.json({ error: true, message: 'Failed to delete profile photo. Please try again.' }); 
                                     }else{
                                         user.username = req.body.username;
+                                        user.displayName = req.body.displayName;
+                                        user.gender = req.body.gender;
+                                        user.email = req.body.email;
                                         user.profilePhoto = fileName;
                                         user.save(function (err, user){
                                             res.json({ token: user.generateJWT() });
@@ -91,6 +96,9 @@ router.post('/profile', auth, function(req, res, next) {
                                 });
                             }else{
                                 user.username = req.body.username;
+                                user.displayName = req.body.displayName;
+                                user.gender = req.body.gender;
+                                user.email = req.body.email;
                                 user.profilePhoto = fileName;
                                 user.save(function (err, user){
                                     res.json({ token: user.generateJWT() });
@@ -99,6 +107,9 @@ router.post('/profile', auth, function(req, res, next) {
                         });
                     }else{
                         user.username = req.body.username;
+                        user.displayName = req.body.displayName;
+                        user.gender = req.body.gender;
+                        user.email = req.body.email;
                         user.profilePhoto = fileName;
                         user.save(function (err, user){
                             res.json({ token: user.generateJWT() });
@@ -110,6 +121,9 @@ router.post('/profile', auth, function(req, res, next) {
     }else{
         User.findOne({ _id: req.payload._id }).exec(function (err, user){
             user.username = req.body.username;
+            user.displayName = req.body.displayName;
+            user.gender = req.body.gender;
+            user.email = req.body.email;
             user.save(function (err, user){
                 res.json({ token: user.generateJWT() });
             });
@@ -363,28 +377,23 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
-router.post('/auth/facebook', function (req, res, next){
+router.post('/login/facebook', function (req, res, next){
     
     var facebookUserId = req.body.facebookUserId;
+    
     User.findOne({ facebook: facebookUserId }).exec(function (err, user){
-        console.log(user);
         if(err){ return res.status(401).json('Failed to fetch user profile. Please try again.'); }
         if(!user){ return res.status(401).json('No user found with this credentials. Please register into app.'); }
         
-        user.displayName = req.body.name;
-        user.gender = req.body.gender;
-        user.email = req.body.email;
-        user.profilePhoto = req.body.picture;
+        user.displayName = !user.displayName || req.body.name;
+        user.gender = !user.gender === '' || req.body.gender;
+        user.email = !user.email === '' || req.body.email;
+        user.profilePhoto = !user.profilePhoto === '' || req.body.picture;
         
         user.save(function (err, user){
             res.json({ token: user.generateJWT() });
         });
     });
-});
-
-router.get('/auth/facebook/callback', function (req, res, next){
-    passport.authenticate('facebook', { successRedirect: '/',
-                                      failureRedirect: '/login' });
 });
 
 router.post('/logout', function(req, res, next){

@@ -8,15 +8,18 @@
         <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="/node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         <link href="/node_modules/bootstrap-social/bootstrap-social.css" rel="stylesheet">
+        <link href="/node_modules/angular-ui-select/select.min.css" rel="stylesheet">
         <link href="/public/stylesheets/style.css" rel="stylesheet">
 
         <script src="/node_modules/angular/angular.min.js"></script>
         <script src="/node_modules/angular-ui-router/build/angular-ui-router.min.js"></script>
+        <script src="/node_modules/angular-sanitize/angular-sanitize.min.js"></script>
         
         <script src="/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
         <script src="/node_modules/alertify.js/dist/js/ngAlertify.js"></script>
         <script src="/node_modules/ng-flow/dist/ng-flow-standalone.js"></script>
         <script src="/node_modules/underscore/underscore-min.js"></script>
+        <script src="/node_modules/angular-ui-select/select.min.js"></script>
 
         <script src="/public/javascripts/angularApp.js"></script>
         <script src="/public/javascripts/constants/constants.js"></script>
@@ -24,6 +27,7 @@
         <script src="/public/javascripts/factory/auth.js"></script>
         <script src="/public/javascripts/factory/post.js"></script>
         <script src="/public/javascripts/factory/user.js"></script>
+        <script src="/public/javascripts/directives/disableXHR.js"></script>
         <script src="/public/javascripts/controller/auth.js"></script>
         <script src="/public/javascripts/controller/navbar.js"></script>
         <script src="/public/javascripts/controller/home.js"></script>
@@ -39,33 +43,33 @@
                 <li>
                     <a href="/#/home/">Home</a>
                 </li>
-                <li ng-show="isLoggedIn() && !currentUser.profilePhoto" 
+                <li ng-if="isLoggedIn() && !currentUser.profilePhoto" 
                     class="pull-rigth">
                     <img ng-src="/public/images/profiles/icon-user-default.png" 
                          alt="profile-photo"
                          class="profile-photo hand" width="40"/>
                 </li> 
-                <li ng-show="isLoggedIn() && currentUser.profilePhoto && currentUser.facebook === ''"
+                <li ng-if="isLoggedIn() && currentUser.profilePhoto && currentUser.facebook === ''"
                     class="pull-rigth">
                     <img ng-src="/public/images/profiles/{{ currentUser.profilePhoto }}" 
                          alt="profile-photo"
                          class="profile-photo hand" width="40"/>
                 </li>
-                <li ng-show="isLoggedIn() && currentUser.profilePhoto && currentUser.facebook !== ''"
+                <li ng-if="isLoggedIn() && currentUser.profilePhoto && currentUser.facebook !== ''"
                     class="pull-rigth">
                     <img ng-src="{{ currentUser.profilePhoto }}" 
                          alt="profile-photo"
                          class="profile-photo hand" width="40"/>
                 </li>
-                <li ng-show="isLoggedIn() && currentUser.displayName === ''" class="pull-rigth">
+                <li ng-if="isLoggedIn() && currentUser.displayName === ''" class="pull-rigth">
                     <a href="/#/profile">{{ currentUser.username }}</a>
                 </li>
-                <li ng-show="isLoggedIn() && currentUser.displayName !== ''" class="pull-rigth">
+                <li ng-if="isLoggedIn() && currentUser.displayName !== ''" class="pull-rigth">
                     <a href="/#/profile">{{ currentUser.displayName }}</a>
                 </li>
-                <li ng-show="isLoggedIn()" class="pull-rigth"><a href="" ng-click="logOut()">Log Out</a></li>
-                <li ng-hide="isLoggedIn()" class="pull-rigth"><a href="/#/login">Log In</a></li>
-                <li ng-hide="isLoggedIn()" class="pull-rigth"><a href="/#/register">Register</a></li>
+                <li ng-if="isLoggedIn()" class="pull-rigth"><a href="" ng-click="logOut()">Log Out</a></li>
+                <li ng-if="!isLoggedIn()" class="pull-rigth"><a href="/#/login">Log In</a></li>
+                <li ng-if="!isLoggedIn()" class="pull-rigth"><a href="/#/register">Register</a></li>
             </ul>
         </nav>
         <div class="row margin-top">
