@@ -9,7 +9,6 @@ var jwt = require('express-jwt');
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-//var request = require('request');
 
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
@@ -19,7 +18,6 @@ var Downvote = mongoose.model('Downvote');
 
 //var FACEBOOK_APP_ID = '888064754608702';
 //var FACEBOOK_APP_SECRET = 'b355265f3c38d78383f6b7a47dd81e16';
-//var sleep = require('sleep');
 
 /* middleware */
 var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });//'SECRET' it is strongly recommended that you use an environment variable
