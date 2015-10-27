@@ -76,7 +76,7 @@ app.factory('Auth', ['$http', '$window', '$state', '$q', 'tokenName', 'fbAppId',
                     }else{
                         if(fbResponse.status === 'connected'){
                             FB.api('/me', { fields: ['name', 'email', 'gender', 'picture'] }, function (resp){
-                                $http.post('/auth/facebook', {
+                                $http.post('/login/facebook', {
                                     accessToken: fbResponse.authResponse.accessToken,
                                     facebookUserId: fbResponse.authResponse.userID,
                                     name: resp.name,

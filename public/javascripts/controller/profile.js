@@ -46,10 +46,10 @@ app.controller('profile', [
         };
         
         function sendCurrentProfile(){
-            User.edit($scope.user).success(function (data){
+            User.edit($scope.user)
+            .success(function (data){
                 alertify.success('Profile updated');
                 var reload = $timeout(function() { 
-                    $timeout.cancel(reload);$window.location.reload();
                     $window.location.reload();
                 }, 2000);
             });

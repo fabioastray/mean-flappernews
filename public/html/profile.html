@@ -86,6 +86,7 @@
             <td></td>
             <td class="pull-right">
                 <button type="submit" class="btn btn-primary" ng-click="editProfile()"
+                        disable-xhr
                         ng-disabled="profileForm.$invalid || !isEmail(user.email)">Save</button>
                 <button ng-click="cancel(); $flow.files = [];" class="btn btn-danger">Cancel</button>
             </td>
